@@ -1,34 +1,36 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 const mockCartItems = [
-  { id: 1, name: "Laranja Premium", quantity: 5, unitPrice: 4.50 },
-  { id: 2, name: "Morango Orgânico", quantity: 3, unitPrice: 8.00 },
-  { id: 3, name: "Maçã Fuji", quantity: 8, unitPrice: 5.00 },
+  { id: 1, name: "Laranja Premium", weight: 2.5, pricePerKg: 4.50 },
+  { id: 2, name: "Morango Orgânico", weight: 1.2, pricePerKg: 18.00 },
+  { id: 3, name: "Maçã Fuji", weight: 3.8, pricePerKg: 5.50 },
 ];
 
 export default function Cart() {
   const [items, setItems] = useState(mockCartItems);
   const [discount, setDiscount] = useState("0");
 
-  const updateQuantity = (id: number, delta: number) => {
-    setItems(items.map(item => 
-      item.id === id 
-        ? { ...item, quantity: Math.max(1, item.quantity + delta) }
-        : item
-    ));
+  const updateWeight = (id: number, newWeight: string) => {
+    const weight = parseFloat(newWeight) || 0;
+    if (weight >= 0) {
+      setItems(items.map(item => 
+        item.id === id ? { ...item, weight } : item
+      ));
+    }
   };
 
   const removeItem = (id: number) => {
     setItems(items.filter(item => item.id !== id));
   };
 
-  const subtotal = items.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+  const subtotal = items.reduce((sum, item) => sum + (item.weight * item.pricePerKg), 0);
   const discountAmount = subtotal * (parseInt(discount) / 100);
   const total = subtotal - discountAmount;
 
@@ -48,33 +50,28 @@ export default function Cart() {
                     <div className="flex-1">
                       <h3 className="font-semibold text-lg">{item.name}</h3>
                       <p className="text-sm text-muted-foreground">
-                        R$ {item.unitPrice.toFixed(2)} / unidade
+                        R$ {item.pricePerKg.toFixed(2)} / kg
                       </p>
                     </div>
                     
-                    <div className="flex items-center gap-2">
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => updateQuantity(item.id, -1)}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <span className="w-12 text-center font-semibold">
-                        {item.quantity}
-                      </span>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => updateQuantity(item.id, 1)}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                    <div className="flex flex-col items-center gap-1">
+                      <Label htmlFor={`weight-${item.id}`} className="text-xs text-muted-foreground">
+                        Peso (kg)
+                      </Label>
+                      <Input
+                        id={`weight-${item.id}`}
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        value={item.weight}
+                        onChange={(e) => updateWeight(item.id, e.target.value)}
+                        className="w-24 text-center font-semibold"
+                      />
                     </div>
 
                     <div className="text-right min-w-[100px]">
                       <p className="font-bold text-lg text-primary">
-                        R$ {(item.quantity * item.unitPrice).toFixed(2)}
+                        R$ {(item.weight * item.pricePerKg).toFixed(2)}
                       </p>
                     </div>
 

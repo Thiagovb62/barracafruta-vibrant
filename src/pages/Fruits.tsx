@@ -3,26 +3,37 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Minus, Plus, ShoppingCart } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { ShoppingCart } from "lucide-react";
 import { useState } from "react";
 
 const mockFruits = [
-  { id: 1, name: "Laranja", price: 4.50, stock: 50, freshness: "Fresca", classification: "Extra", available: true },
-  { id: 2, name: "Morango", price: 8.00, stock: 30, freshness: "Fresca", classification: "Primeira", available: true },
-  { id: 3, name: "Manga", price: 6.00, stock: 0, freshness: "Fresca", classification: "Segunda", available: false },
-  { id: 4, name: "Maçã", price: 5.00, stock: 45, freshness: "Fresca", classification: "Primeira", available: true },
-  { id: 5, name: "Uva", price: 12.00, stock: 20, freshness: "Fresca", classification: "Extra", available: true },
-  { id: 6, name: "Abacaxi", price: 7.50, stock: 0, freshness: "Fresca", classification: "Terceira", available: false },
+  { id: 1, name: "Laranja", pricePerKg: 4.50, stock: 50, freshness: "Fresca", classification: "Extra", available: true },
+  { id: 2, name: "Morango", pricePerKg: 18.00, stock: 30, freshness: "Fresca", classification: "Primeira", available: true },
+  { id: 3, name: "Manga", pricePerKg: 6.00, stock: 0, freshness: "Fresca", classification: "Segunda", available: false },
+  { id: 4, name: "Maçã", pricePerKg: 5.50, stock: 45, freshness: "Fresca", classification: "Primeira", available: true },
+  { id: 5, name: "Uva", pricePerKg: 12.00, stock: 20, freshness: "Fresca", classification: "Extra", available: true },
+  { id: 6, name: "Abacaxi", pricePerKg: 3.50, stock: 0, freshness: "Fresca", classification: "Terceira", available: false },
 ];
 
 export default function Fruits() {
-  const [quantities, setQuantities] = useState<Record<number, number>>({});
+  const [weights, setWeights] = useState<Record<number, string>>({});
 
-  const updateQuantity = (id: number, delta: number) => {
-    setQuantities(prev => ({
+  const updateWeight = (id: number, weight: string) => {
+    // Allow only numbers and one decimal point
+    const validWeight = weight.replace(/[^\d.]/g, '');
+    const parts = validWeight.split('.');
+    if (parts.length > 2) return; // Prevent multiple decimal points
+    
+    setWeights(prev => ({
       ...prev,
-      [id]: Math.max(0, (prev[id] || 0) + delta)
+      [id]: validWeight
     }));
+  };
+
+  const calculateTotal = (pricePerKg: number, weight: string) => {
+    const weightNum = parseFloat(weight) || 0;
+    return (pricePerKg * weightNum).toFixed(2);
   };
 
   return (
@@ -59,47 +70,42 @@ export default function Fruits() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Estoque:</span>
-                  <span className="font-medium">{fruit.stock} unidades</span>
+                  <span className="font-medium">{fruit.stock} kg</span>
                 </div>
                 <div className="flex justify-between items-center pt-2 border-t">
                   <span className="text-2xl font-bold text-primary">
-                    R$ {fruit.price.toFixed(2)}
+                    R$ {fruit.pricePerKg.toFixed(2)}/kg
                   </span>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col gap-3">
                 {fruit.available && (
                   <>
-                    <div className="flex items-center gap-3 w-full">
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => updateQuantity(fruit.id, -1)}
-                        disabled={!quantities[fruit.id]}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
+                    <div className="w-full space-y-2">
+                      <Label htmlFor={`weight-${fruit.id}`} className="text-sm font-medium">
+                        Peso (kg)
+                      </Label>
                       <Input
-                        type="number"
-                        value={quantities[fruit.id] || 0}
-                        onChange={(e) => setQuantities(prev => ({
-                          ...prev,
-                          [fruit.id]: parseInt(e.target.value) || 0
-                        }))}
-                        className="text-center"
-                        min="0"
-                        max={fruit.stock}
+                        id={`weight-${fruit.id}`}
+                        type="text"
+                        value={weights[fruit.id] || ''}
+                        onChange={(e) => updateWeight(fruit.id, e.target.value)}
+                        placeholder="0.0"
+                        className="text-center text-lg"
                       />
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        onClick={() => updateQuantity(fruit.id, 1)}
-                        disabled={(quantities[fruit.id] || 0) >= fruit.stock}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
+                      {weights[fruit.id] && parseFloat(weights[fruit.id]) > 0 && (
+                        <div className="text-center">
+                          <span className="text-sm text-muted-foreground">Total: </span>
+                          <span className="text-lg font-bold text-primary">
+                            R$ {calculateTotal(fruit.pricePerKg, weights[fruit.id])}
+                          </span>
+                        </div>
+                      )}
                     </div>
-                    <Button className="w-full" disabled={!quantities[fruit.id]}>
+                    <Button 
+                      className="w-full" 
+                      disabled={!weights[fruit.id] || parseFloat(weights[fruit.id]) <= 0}
+                    >
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Adicionar ao Carrinho
                     </Button>
