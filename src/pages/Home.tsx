@@ -1,12 +1,45 @@
+import { useState } from "react";
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/NavLink";
 import heroFruits from "@/assets/hero-fruits.jpg";
 import { ShoppingCart, Package, Leaf } from "lucide-react";
 
+const fruits = ["🍊", "🍓", "🍇", "🥝", "🍑", "🍒", "🍍", "🥭"];
+
 export default function Home() {
+  const [fallingFruits, setFallingFruits] = useState<Array<{ id: number; emoji: string; left: number }>>([]);
+
+  const createFallingFruit = () => {
+    const randomFruit = fruits[Math.floor(Math.random() * fruits.length)];
+    const randomLeft = Math.random() * 80 + 10; // 10% to 90% from left
+    const newFruit = {
+      id: Date.now() + Math.random(),
+      emoji: randomFruit,
+      left: randomLeft,
+    };
+    
+    setFallingFruits(prev => [...prev, newFruit]);
+    
+    // Remove fruit after animation completes
+    setTimeout(() => {
+      setFallingFruits(prev => prev.filter(f => f.id !== newFruit.id));
+    }, 2000);
+  };
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative overflow-hidden">
+      {/* Falling fruits */}
+      {fallingFruits.map(fruit => (
+        <div
+          key={fruit.id}
+          className="fixed text-6xl pointer-events-none z-50 animate-fruit-fall"
+          style={{ left: `${fruit.left}%`, top: "-100px" }}
+        >
+          {fruit.emoji}
+        </div>
+      ))}
+      
       <Header />
       
       <div className="relative h-[500px] overflow-hidden">
@@ -32,7 +65,12 @@ export default function Home() {
                   </Button>
                 </NavLink>
                 <NavLink to="/auth">
-                  <Button size="lg" variant="outline" className="text-lg border-2 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
+                  <Button 
+                    size="lg" 
+                    variant="outline" 
+                    className="text-lg border-2 border-white bg-white/20 backdrop-blur-sm text-white font-bold hover:bg-white hover:text-primary shadow-lg"
+                    onClick={createFallingFruit}
+                  >
                     Fazer Login
                   </Button>
                 </NavLink>
