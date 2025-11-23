@@ -41,6 +41,9 @@ All colors MUST be HSL.
     --orange-dark: 20 95% 50%;
     --cream-light: 40 100% 98%;
     --green-fresh: 140 50% 45%;
+    
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--orange-dark)) 100%);
+    --shadow-glow: 0 10px 40px -10px hsl(var(--primary) / 0.4);
 
     --sidebar-background: 0 0% 98%;
 

@@ -62,8 +62,8 @@ export default function Home() {
                 <NavLink to="/auth">
                   <Button 
                     size="lg" 
-                    variant="outline" 
-                    className="text-lg border-2 border-white bg-white/20 backdrop-blur-sm text-white font-bold hover:bg-white hover:text-primary shadow-lg"
+                    variant="hero"
+                    className="text-lg font-bold"
                     onClick={createFallingFruit}
                   >
                     Fazer Login
@@ -72,8 +72,8 @@ export default function Home() {
                 <NavLink to="/vendor-registration">
                   <Button 
                     size="lg" 
-                    variant="secondary"
-                    className="text-lg"
+                    variant="premium"
+                    className="text-lg font-bold"
                   >
                     Cadastro de Vendedor
                   </Button>
