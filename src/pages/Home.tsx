@@ -58,7 +58,7 @@ export default function Home() {
               <p className="text-xl md:text-2xl mb-8 drop-shadow">
                 Frutas frescas, direto do produtor para você!
               </p>
-              <div className="flex justify-center">
+              <div className="flex justify-center gap-4">
                 <NavLink to="/auth">
                   <Button 
                     size="lg" 
@@ -67,6 +67,15 @@ export default function Home() {
                     onClick={createFallingFruit}
                   >
                     Fazer Login
+                  </Button>
+                </NavLink>
+                <NavLink to="/vendor-registration">
+                  <Button 
+                    size="lg" 
+                    variant="secondary"
+                    className="text-lg"
+                  >
+                    Cadastro de Vendedor
                   </Button>
                 </NavLink>
               </div>
