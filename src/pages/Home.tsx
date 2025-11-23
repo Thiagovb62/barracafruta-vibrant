@@ -49,21 +49,16 @@ export default function Home() {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/80 to-transparent" />
-        <div className="absolute inset-0 flex items-center">
+        <div className="absolute inset-0 flex items-center justify-center">
           <div className="container mx-auto px-6">
-            <div className="max-w-2xl text-primary-foreground">
+            <div className="max-w-2xl mx-auto text-center text-primary-foreground">
               <h1 className="text-5xl md:text-6xl font-bold mb-4 drop-shadow-lg">
                 BarracaFruta
               </h1>
               <p className="text-xl md:text-2xl mb-8 drop-shadow">
                 Frutas frescas, direto do produtor para você!
               </p>
-              <div className="flex gap-4">
-                <NavLink to="/fruits">
-                  <Button size="lg" variant="secondary" className="text-lg">
-                    Ver Frutas
-                  </Button>
-                </NavLink>
+              <div className="flex justify-center">
                 <NavLink to="/auth">
                   <Button 
                     size="lg" 
