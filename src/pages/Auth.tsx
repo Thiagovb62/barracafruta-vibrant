@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +9,7 @@ import heroFruits from "@/assets/hero-fruits.jpg";
 import logo from "@/assets/logo.png";
 
 export default function Auth() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<"client" | "vendor" | "admin">("client");
@@ -41,7 +43,7 @@ export default function Auth() {
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 mb-6">
                   <TabsTrigger value="login">Login</TabsTrigger>
-                  <TabsTrigger value="signup">Cadastrar-se</TabsTrigger>
+                  <TabsTrigger value="signup" onClick={() => navigate("/vendor-registration")}>Cadastrar-se</TabsTrigger>
                 </TabsList>
 
                 <TabsContent value="login" className="space-y-4">
