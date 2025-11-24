@@ -2,7 +2,8 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Download, Eye } from "lucide-react";
+import { Download, Eye, FileDown } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const mockOrders = [
   { 
@@ -46,12 +47,27 @@ const statusColors: Record<string, "default" | "secondary" | "destructive"> = {
 };
 
 export default function Orders() {
+  const handleDownloadAllOrders = () => {
+    const today = new Date().toLocaleDateString('pt-BR');
+    toast({
+      title: "Download iniciado",
+      description: `Baixando histórico completo de pedidos do dia ${today}`,
+    });
+    // Aqui seria implementada a lógica real de download
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       
       <div className="container mx-auto p-6">
-        <h1 className="text-4xl font-bold text-center mb-8">Histórico de Pedidos</h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold">Histórico de Pedidos</h1>
+          <Button onClick={handleDownloadAllOrders} variant="default" size="lg">
+            <FileDown className="h-5 w-5 mr-2" />
+            Baixar Histórico Completo
+          </Button>
+        </div>
 
         <div className="grid gap-4 max-w-4xl mx-auto">
           {mockOrders.map((order) => (
