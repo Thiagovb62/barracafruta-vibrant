@@ -16,7 +16,7 @@ export default function Auth() {
   return (
     <div className="min-h-screen flex flex-col">
       <Button 
-        variant="ghost" 
+        variant="premium" 
         onClick={() => navigate("/")}
         className="absolute top-4 left-4 z-10"
       >
