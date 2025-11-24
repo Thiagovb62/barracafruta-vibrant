@@ -4,20 +4,30 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ShoppingCart } from "lucide-react";
-import { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ShoppingCart, Search } from "lucide-react";
+import { useState, useMemo } from "react";
+import laranjaImg from "@/assets/fruits/laranja.jpg";
+import morangoImg from "@/assets/fruits/morango.jpg";
+import mangaImg from "@/assets/fruits/manga.jpg";
+import macaImg from "@/assets/fruits/maca.jpg";
+import uvaImg from "@/assets/fruits/uva.jpg";
+import abacaxiImg from "@/assets/fruits/abacaxi.jpg";
 
 const mockFruits = [
-  { id: 1, name: "Laranja", pricePerKg: 4.50, stock: 50, freshness: "Fresca", classification: "Extra", available: true },
-  { id: 2, name: "Morango", pricePerKg: 18.00, stock: 30, freshness: "Fresca", classification: "Primeira", available: true },
-  { id: 3, name: "Manga", pricePerKg: 6.00, stock: 0, freshness: "Fresca", classification: "Segunda", available: false },
-  { id: 4, name: "Maçã", pricePerKg: 5.50, stock: 45, freshness: "Fresca", classification: "Primeira", available: true },
-  { id: 5, name: "Uva", pricePerKg: 12.00, stock: 20, freshness: "Fresca", classification: "Extra", available: true },
-  { id: 6, name: "Abacaxi", pricePerKg: 3.50, stock: 0, freshness: "Fresca", classification: "Terceira", available: false },
+  { id: 1, name: "Laranja", pricePerKg: 4.50, stock: 50, freshness: "Fresca", classification: "Extra", available: true, image: laranjaImg },
+  { id: 2, name: "Morango", pricePerKg: 18.00, stock: 30, freshness: "Fresca", classification: "Primeira", available: true, image: morangoImg },
+  { id: 3, name: "Manga", pricePerKg: 6.00, stock: 0, freshness: "Fresca", classification: "Segunda", available: false, image: mangaImg },
+  { id: 4, name: "Maçã", pricePerKg: 5.50, stock: 45, freshness: "Fresca", classification: "Primeira", available: true, image: macaImg },
+  { id: 5, name: "Uva", pricePerKg: 12.00, stock: 20, freshness: "Fresca", classification: "Extra", available: true, image: uvaImg },
+  { id: 6, name: "Abacaxi", pricePerKg: 3.50, stock: 0, freshness: "Fresca", classification: "Terceira", available: false, image: abacaxiImg },
 ];
 
 export default function Fruits() {
   const [weights, setWeights] = useState<Record<number, string>>({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classificationFilter, setClassificationFilter] = useState<string>("all");
+  const [availabilityFilter, setAvailabilityFilter] = useState<string>("all");
 
   const updateWeight = (id: number, weight: string) => {
     // Allow only numbers and one decimal point
@@ -36,6 +46,18 @@ export default function Fruits() {
     return (pricePerKg * weightNum).toFixed(2);
   };
 
+  const filteredFruits = useMemo(() => {
+    return mockFruits.filter((fruit) => {
+      const matchesSearch = fruit.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesClassification = classificationFilter === "all" || fruit.classification === classificationFilter;
+      const matchesAvailability = availabilityFilter === "all" || 
+        (availabilityFilter === "available" && fruit.available) ||
+        (availabilityFilter === "unavailable" && !fruit.available);
+      
+      return matchesSearch && matchesClassification && matchesAvailability;
+    });
+  }, [searchTerm, classificationFilter, availabilityFilter]);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -45,13 +67,65 @@ export default function Fruits() {
           Frutas Disponíveis
         </h1>
 
+        {/* Filters Section */}
+        <div className="mb-8 space-y-4">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              placeholder="Buscar frutas..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Classificação</Label>
+              <Select value={classificationFilter} onValueChange={setClassificationFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="Extra">Extra</SelectItem>
+                  <SelectItem value="Primeira">Primeira</SelectItem>
+                  <SelectItem value="Segunda">Segunda</SelectItem>
+                  <SelectItem value="Terceira">Terceira</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Disponibilidade</Label>
+              <Select value={availabilityFilter} onValueChange={setAvailabilityFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="available">Disponíveis</SelectItem>
+                  <SelectItem value="unavailable">Indisponíveis</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockFruits.map((fruit) => (
+          {filteredFruits.map((fruit) => (
             <Card 
               key={fruit.id} 
               className={`border-2 ${fruit.available ? 'border-primary/30' : 'border-muted opacity-60'}`}
             >
               <CardHeader>
+                <div className="relative h-48 mb-4 overflow-hidden rounded-lg bg-muted">
+                  <img 
+                    src={fruit.image} 
+                    alt={fruit.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div className="flex justify-between items-start">
                   <CardTitle className="text-2xl">{fruit.name}</CardTitle>
                   <Badge variant={fruit.available ? "default" : "secondary"}>
