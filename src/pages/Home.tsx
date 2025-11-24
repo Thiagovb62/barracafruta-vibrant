@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { NavLink } from "@/components/NavLink";
 import heroFruits from "@/assets/hero-fruits.jpg";
-import { ShoppingCart, Package, Leaf } from "lucide-react";
+import { ShoppingCart, Package, Zap, BarChart3, Clock } from "lucide-react";
 
 const fruits = ["🍊", "🍓", "🍇", "🥝", "🍑", "🍒", "🍍", "🥭"];
 
@@ -86,37 +86,37 @@ export default function Home() {
 
       <div className="container mx-auto px-6 py-16">
         <h2 className="text-4xl font-bold text-center mb-12">
-          Como Funciona
+          Benefícios do Sistema
         </h2>
 
         <div className="grid md:grid-cols-3 gap-8">
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
-              <Leaf className="h-10 w-10 text-accent" />
+              <Zap className="h-10 w-10 text-accent" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Frutas Frescas</h3>
+            <h3 className="text-xl font-semibold mb-2">Automatizado</h3>
             <p className="text-muted-foreground">
-              Selecionamos as melhores frutas com frescor garantido
+              Processo automatizado que economiza tempo e reduz erros operacionais
             </p>
           </div>
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
-              <ShoppingCart className="h-10 w-10 text-primary" />
+              <BarChart3 className="h-10 w-10 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Compra Fácil</h3>
+            <h3 className="text-xl font-semibold mb-2">Gestão de Estoque</h3>
             <p className="text-muted-foreground">
-              Escolha suas frutas favoritas e adicione ao carrinho
+              Controle total do estoque em tempo real com alertas inteligentes
             </p>
           </div>
 
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 mb-4">
-              <Package className="h-10 w-10 text-primary" />
+              <Clock className="h-10 w-10 text-primary" />
             </div>
-            <h3 className="text-xl font-semibold mb-2">Entrega Rápida</h3>
+            <h3 className="text-xl font-semibold mb-2">Rapidez</h3>
             <p className="text-muted-foreground">
-              Receba suas frutas frescas direto em casa
+              Agilidade em pedidos e entregas com sistema otimizado
             </p>
           </div>
         </div>
