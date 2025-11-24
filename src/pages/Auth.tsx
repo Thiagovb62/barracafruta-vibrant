@@ -1,17 +1,29 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
 import heroFruits from "@/assets/hero-fruits.jpg";
 import logo from "@/assets/logo.png";
 
 export default function Auth() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Button 
+        variant="ghost" 
+        onClick={() => navigate("/")}
+        className="absolute top-4 left-4 z-10"
+      >
+        <ArrowLeft className="h-4 w-4 mr-2" />
+        Voltar
+      </Button>
+      
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img 
           src={heroFruits} 
